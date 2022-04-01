@@ -21,3 +21,7 @@ tasks.withType<KotlinCompile> {
 application {
     mainClass.set("MainKt")
 }
+
+dependencies {
+    //ここにライブラリやフレームワークの依存関係を追加していく。
+}
