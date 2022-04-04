@@ -74,6 +74,92 @@ fun main(args: Array<String>) {
     val updated = user72.copy(1, "Kotlin")
     println(updated.toString())
 
+    //デフォルト引数のテスト
+    //リスト2,4,2
+    printUserInfo(1)
+    printUserInfo(1, "Saito")
+
+    //リスト2.4.5
+    val test = User8(1)
+    println(test.toString())
+
+    //リスト2.5.7
+    printCalcResult(10, 20, {num1, num2 -> num1 + num2})
+    printCalcResult(10, 20, {num1, num2 -> num1 * num2})
+
+    //リスト2.6.2
+    println(6.square())
+
+    //スコープ関数
+    //with--複数の処理をまとめて行う
+    //リスト2.7.1(with不使用)
+//    val list = mutableListOf<Int>()
+//    for(i in 1..10){
+//        if(i % 2 == 1) list.add(i)
+//    }
+//    val oddNumbers = list.joinToString(separator = " ")
+//    println(oddNumbers)
+
+    //リスト2.7.2(with使用)
+//    val oddNumbers = with(mutableListOf<Int>()){
+//        for(i in 1..10){
+//            if(i % 2 == 1)this.add(i)
+//        }
+//        this.joinToString(separator = " ")
+//    }
+//    println(oddNumbers)
+
+    //run--NUllableなオブジェクトに複数の処理をまとめて行う
+    //リスト2.7.4
+//    val oddNumbers = mutableListOf<Int>().run{
+//        for(i in 1..10){
+//            if(i % 2 == 1)this.add(i)
+//        }
+//        this.joinToString(separator = " ")
+//    }
+//    println(oddNumbers)
+
+    //リスト2.7.5
+//    data class User(var nam: String)
+//    fun getUserString(user: User?, newName: String): String? {
+//        return user?.run {
+//            nam = newName
+//            toString()
+//        }
+//    }
+
+    //let--Nullableなオブジェクトに名前をつけて処理を行う
+    //リスト2.7.6
+//    val oddNumbers = mutableListOf<Int>().let{ list ->
+//        for(i in 1..10){
+//            if(i % 2 == 1)list.add(i)
+//        }
+//        list.joinToString(separator = " ")
+//    }
+//    println(oddNumbers)
+
+    //リスト2.7.7
+//    data class User(val name: String)
+
+//    fun createUser(name: String?): User?{
+//        return name?.let{n -> User(n)}
+//    }
+
+    //リスト2.7.9
+//    fun createUser(name: String?): User? {
+//        return name?.let{User(it)}
+//    }
+
+    //apply--オブジェクトに変更を加えて返す
+//    val oddNumbers = mutableListOf<Int>().apply{
+//        for (i in 1..10){
+//            if(i % 2 == 1)this.add(i)
+//        }
+//        this.joinToString(separator = " ")
+//    }
+//    println(oddNumbers)
+
+    //
 }
 
 //リスト2.1.1
@@ -181,3 +267,63 @@ data class User7(val id: Int, val name: String){
     get() = name != ""
 }
 
+//デフォルト引数
+fun printUserInfo(id: Int, name: String = "Default Name"){
+    println("id=$id name=$name")
+}
+
+//リスト2.4.4
+data class User8(val id: Int, val name: String ="Default Name")
+
+//関数型の定義  ※(引数...) -> 戻り値の型
+val calc: (Int, Int) -> Int = {num1, num2 -> num1 + num2}
+//リスト2.5.4
+val squared: (Int) -> Int = { it * it}
+
+//高階関数(関数型のオブジェクトを引数に受け取る関数)
+//fun printCalcReault(num1: Int, num2: Int, calc: (Int, Int)-> Int) {
+//    val result = calc(num1, num2)
+//    println(result)
+//}
+
+//リスト2.5.8
+//fun printAdditionResult(x: Int, y: Int) {
+//    println("足し算の結果を表示します")
+//    printCalcResult(x, y, {num1, num2 -> num1 + num2})
+//    printCalcResult(x, y){num1, num2 ->
+//        num1 + num2
+//    }
+//}
+
+//fun printMultiplicationResult(x: Int, y: Int){
+//    println("掛け算に結果を表示します")
+//    printCalcResult(x, y, {num1, num2 -> num1 * num2})
+//}
+
+//タイプエイリアス　typealias 名前 = 関数型の定義
+//リスト2.5.10
+typealias Calc = (Int, Int)-> Int
+
+//リスト2.5.11
+fun printCalcResult(num1: Int, num2: Int, calc: Calc){
+    val result = calc(num1, num2)
+    println(result)
+}
+
+//拡張関数について
+//リスト2.6.1(通常)
+//fun square(num: Int): Int = num * num
+//リスト2.6.2（拡張関数）
+fun Int.square(): Int = this * this
+
+//リスト2.7.12
+data class User12(val id: Int, var name: String, var address: String)
+fun getUser(id: Int): User {
+    return User12(id, "Takehata", "Tokyo")
+}
+fun updateUser(id: Int, newName: String, newAddress: String){
+    val user = getUser(id).apply{
+        this.name = newName
+        this.address = newAddress
+    }
+}
