@@ -24,4 +24,6 @@ application {
 
 dependencies {
     //ここにライブラリやフレームワークの依存関係を追加していく。
+    //リスト2.11.1
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 }

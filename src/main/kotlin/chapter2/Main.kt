@@ -1,3 +1,10 @@
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.reflect.KProperty
+
 fun main(args: Array<String>) {
     println("Hello World!")
 
@@ -174,6 +181,33 @@ fun main(args: Array<String>) {
     val executorDelegate = AddCalculationExecutorDelegate(CommomCalculationExecutor())
     executorDelegate.printStartMessage()
     println(executorDelegate.calc(8,11))
+
+    //forEach--コレクションの要素を順番に処理する
+    //リスト2.10.2
+    val list = listOf(1,2,3)
+    list.forEach{num -> println(num) }
+    //リスト2.10.3 上記書き換え
+    list.forEach{ println(it) }
+
+    //map--要素を別の形に変換したListを生成する
+    //リスト2.10.4
+    val idList = list.map { it * 10}
+    idList.forEach{ println(it) }
+    //リスト2.10.5 idのリストに変更
+    val list2 = listOf(User(1, 100, "Takehata"), User(2, 200, "Kotlin"))
+    val idList2 = list2.map{ it.id }
+    idList2.forEach { println(it) }
+
+    //filter--条件に該当する要素を抽出する
+    //リスト2.10.6
+    val list3 = listOf(User(1, 100, "Takehata"), User(2, 200, "Kotlin"), User(3, 100, "Java"))
+    val filteredList = list3.filter { it.teamId == 100 }
+    filteredList.forEach { println(it) }
+
+    //first, last -- 条件に該当する先頭、末尾の要素を抽出する
+    println(list3.first())
+    println(list3.last())
+    println(list3.first { it.teamId == 200 })
 }
 
 //リスト2.1.1
@@ -416,3 +450,14 @@ class AddCalculationExecutorDelegate(private val calculationExecutor: Calculatio
 
 //リスト2.10.1 コレクションライブラリ練習用
 data class User(val id: Int, val teamId: Int, val name: String)
+
+//コールチンの基本
+//リスト2.11.2
+fun list2_11_2(){
+    GlobalScope.launch {
+        delay(1000L)
+        println("Naoto.")
+    }
+    println("My name is")
+    Thread.sleep(2000L)
+}
