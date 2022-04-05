@@ -159,7 +159,21 @@ fun main(args: Array<String>) {
 //    }
 //    println(oddNumbers)
 
-    //
+    //演算子オーバーロード
+    //2.8.2
+    val num = Num(5) + Num(1)
+    println(num)
+
+    //2.8.4
+    val greaterThan = Num(5) > Num(1)
+    val lessThan = Num(5) < Num(1)
+    println(greaterThan)
+    println(lessThan)
+
+    //リスト2.9.5
+    val executorDelegate = AddCalculationExecutorDelegate(CommomCalculationExecutor())
+    executorDelegate.printStartMessage()
+    println(executorDelegate.calc(8,11))
 }
 
 //リスト2.1.1
@@ -317,13 +331,88 @@ fun printCalcResult(num1: Int, num2: Int, calc: Calc){
 fun Int.square(): Int = this * this
 
 //リスト2.7.12
-data class User12(val id: Int, var name: String, var address: String)
-fun getUser(id: Int): User {
-    return User12(id, "Takehata", "Tokyo")
-}
-fun updateUser(id: Int, newName: String, newAddress: String){
-    val user = getUser(id).apply{
-        this.name = newName
-        this.address = newAddress
+//data class User12(val id: Int, var name: String, var address: String)
+//fun getUser(id: Int): User {
+//    return User12(id, "Takehata", "Tokyo")
+//}
+//fun updateUser(id: Int, newName: String, newAddress: String){
+//    val userp = getUser(id).apply{
+//        this.name = newName
+//        this.address = newAddress
+//    }
+//    println(userp)
+//}
+
+//also---オブジェクトに変更えお加え返す
+//fun updateUser(id: Int, newName: String, newAddress: String){
+//    val user = getUser(id).also {
+//        it.name = newName
+//        it.address = newAddress
+//    }
+//    println(user)
+//}
+
+//演算子オーバーロード
+//リスト2.8.1
+data class Num(val value: Int) {
+    operator fun plus(num: Num): Num {
+        return Num(value + num.value)
+    }
+    //リスト2.8.3
+    operator fun compareTo(num: Num): Int {
+        return value.compareTo(num.value)
     }
 }
+
+//2.9.1
+interface CalculationExecutor{
+    val message: String
+    fun calc(num1: Int, num2: Int): Int
+    fun printStartMessage()
+}
+
+class CommomCalculationExecutor(override val message: String = "calc"):
+CalculationExecutor{
+    override fun calc(num1: Int, num2: Int): Int {
+        throw java.lang.IllegalStateException("Not implements calc")
+    }
+    override fun printStartMessage(){
+        println("start $message")
+    }
+}
+
+//2.9.2
+class AddCalculationExecutor(private val calculationExecutor: CalculationExecutor) : CalculationExecutor{
+    override val message: String
+        get() = calculationExecutor.message
+    override fun calc(num1: Int, num2: Int): Int{
+        return  num1 + num2
+    }
+
+    override fun printStartMessage() {
+        calculationExecutor.printStartMessage()
+    }
+}
+
+//2.9.4 ※2.9.2をシンプルに記述
+class AddCalculationExecutorDelegate(private val calculationExecutor: CalculationExecutor): CalculationExecutor by calculationExecutor {
+    override fun calc(num1: Int, num2: Int): Int {
+        return num1 + num2
+    }
+}
+
+//リスト2.9.8
+//class DelegateWithMessage<T>{
+//    private var value: T? = null
+//    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+//        println("${property.name}を取得します")
+//        return value!!
+//    }
+//    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+//        println("${property.name}を更新します")
+//        this.value = value
+//    }
+//}
+
+//リスト2.10.1 コレクションライブラリ練習用
+data class User(val id: Int, val teamId: Int, val name: String)
