@@ -3,7 +3,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlin.reflect.KProperty
 
 fun main(args: Array<String>) {
     println("Hello World!")
@@ -208,6 +207,12 @@ fun main(args: Array<String>) {
     println(list3.first())
     println(list3.last())
     println(list3.first { it.teamId == 200 })
+
+    list2_11_2()
+    list2_11_3()
+    list2_11_6()
+    list2_11_7()
+    list2_11_8()
 }
 
 //リスト2.1.1
@@ -460,4 +465,62 @@ fun list2_11_2(){
     }
     println("My name is")
     Thread.sleep(2000L)
+}
+
+//コルーチンスコープビルダー
+//リスト2.11.3
+fun list2_11_3(){
+    runBlocking {
+        launch {
+            delay(1000L)
+            println("Naoto.")
+        }
+        println("My name is")
+    }
+}
+
+//サスペンド関数
+//リスト2.11.5
+suspend fun printName(){
+    delay(1000L)
+    println("Naoto.")
+}
+
+//リスト2.11.6
+fun list2_11_6(){
+    runBlocking{
+        launch{ printName() }
+        println("My name is")
+    }
+}
+
+//リスト2.11.7
+fun list2_11_7(){
+    runBlocking {
+        val result = async {
+            delay(2000L)
+            var sum = 0
+            for (i in 1..10) {
+                sum += i
+            }
+            sum
+        }
+        println("計算中")
+        println("sum=${result.await()}")
+    }
+}
+
+//リスト2.11.8
+fun list2_11_8(){
+    runBlocking {
+        val num1 = async {
+            delay(2000L)
+            1 + 2
+        }
+        val num2 = async {
+            delay(1000L)
+            3 + 4
+        }
+        println("sum=${num1.await() + num2.await()}")
+    }
 }
